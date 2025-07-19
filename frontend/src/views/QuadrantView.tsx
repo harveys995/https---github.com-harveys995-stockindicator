@@ -1,9 +1,9 @@
 import MarketPrice from "./MarketPrice";
+import MovingAverage from "./MovingAverage";
 
 function QuadrantView() {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8">
-        <h1 className="text-black">APPL</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl">
           
           {/* Quadrant 1: Price Data */}
@@ -13,10 +13,7 @@ function QuadrantView() {
   
           {/* Quadrant 2: Earnings Forecast */}
           <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
-            <h2 className="text-xl font-bold text-green-600 mb-2">💰 Earnings Forecast</h2>
-            <p className="text-gray-700">Earnings Date: <span className="font-semibold">2025-07-31</span></p>
-            <p className="text-gray-700">EPS Avg: <span className="font-semibold">$1.42</span></p>
-            <p className="text-gray-500 text-sm">High: $1.51 | Low: $1.34</p>
+            <MovingAverage></MovingAverage>
           </div>
   
           {/* Quadrant 3: Revenue Forecast */}
