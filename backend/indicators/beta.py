@@ -3,34 +3,36 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-def get_beta(ticker: str, market_ticker: str, period: str, interval: str):
-    stock_df = yf.download(ticker, period=period, interval=interval)
-    market_df = yf.download(market_ticker, period=period, interval=interval)
+#! Calculating Beta on 1 month period and 1 day Interval
+# TODO: To incorporate flexibility when calculating Beta, perhaps with user defined period and interval
 
-    if stock_df.empty or market_df.empty:
-        raise ValueError("No data received from Yahoo Finance. Check ticker symbols or internet connection.")
-
-    # Handle multi-level columns by using .columns if needed
-    stock_col = "Adj Close" if "Adj Close" in stock_df.columns else stock_df.columns[-1]
-    market_col = "Adj Close" if "Adj Close" in market_df.columns else market_df.columns[-1]
-
+def get_beta(ticker: str, market_ticker: str, period="1mo", interval="1d"): 
     try:
-        stock = stock_df[stock_col]
-        market = market_df[market_col]
-    except KeyError:
-        raise ValueError(f"Missing expected column '{stock_col}' or '{market_col}' in the data.")
+        stock_df = yf.download(ticker, period=period, interval=interval)
+        market_df = yf.download(market_ticker, period=period, interval=interval)
 
-    df = pd.DataFrame({'stock': stock, 'market': market}).dropna()
-    df['stock_return'] = df['stock'].pct_change()
-    df['market_return'] = df['market'].pct_change()
-    df = df.dropna()
+        print(f"\n📊 Stock data for {ticker}:\n{stock_df.tail()}\n")
+        print(f"📈 Columns in stock_df: {stock_df.columns.tolist()}\n")
 
-    if df.empty:
-        raise ValueError("Not enough data to compute beta.")
+        if stock_df.empty or market_df.empty:
+            raise ValueError("No data received from Yahoo Finance. Check ticker symbols.")
 
-    X = df['market_return'].values.reshape(-1, 1)
-    y = df['stock_return'].values
+        stock = stock_df.get("Adj Close", stock_df.iloc[:, -1])
+        market = market_df.get("Adj Close", market_df.iloc[:, -1])
 
-    reg = LinearRegression().fit(X, y)
-    beta = reg.coef_[0]
-    return round(beta, 2)
+        df = pd.DataFrame({'stock': stock, 'market': market}).dropna()
+        df['stock_return'] = df['stock'].pct_change()
+        df['market_return'] = df['market'].pct_change()
+        df = df.dropna()
+
+        if df.empty:
+            raise ValueError("Not enough data to compute beta.")
+
+        X = df['market_return'].values.reshape(-1, 1)
+        y = df['stock_return'].values
+
+        reg = LinearRegression().fit(X, y)
+        return round(reg.coef_[0], 2)
+
+    except Exception as e:
+        raise ValueError(f"Error computing beta: {e}")

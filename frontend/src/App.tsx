@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import QuadrantView from './views/QuadrantView';
-import Navbar from './Navbar';
+import './BreathingBackground/BreathingBackground.css'
+import BreathingBackground from './BreathingBackground/BreathingBackground';
+import DataObserver from './components/DataObserver';
 
 interface StockData {
   earnings_date: string;
@@ -46,18 +48,9 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <Navbar></Navbar>
+      <BreathingBackground/>
+      <DataObserver /> {/*Watches store and triggers fetch */}
       <QuadrantView></QuadrantView>
-      {/* <div className="bg-gray-400 p-6 rounded-xl shadow-md w-full text-white">
-        <h1 className="text-2xl font-bold mb-4 text-center text-black">AAPL Earnings Forecast</h1>
-        <p className="text-lg"><span className="font-semibold">Earnings Date:</span> {data.earnings_date}</p>
-        <p className="text-lg"><span className="font-semibold">EPS Avg:</span> ${data.eps_avg?.toFixed(2)}</p>
-        <p className="text-lg"><span className="font-semibold">EPS High:</span> ${data.eps_high?.toFixed(2)}</p>
-        <p className="text-lg"><span className="font-semibold">EPS Low:</span> ${data.eps_low?.toFixed(2)}</p>
-        <p className="text-lg"><span className="font-semibold">Revenue Avg:</span> ${data.revenue_avg.toLocaleString()}</p>
-        <p className="text-lg"><span className="font-semibold">Revenue High:</span> ${data.revenue_high.toLocaleString()}</p>
-        <p className="text-lg"><span className="font-semibold">Revenue Low:</span> ${data.revenue_low.toLocaleString()}</p>
-      </div> */}
     </div>
   );
   

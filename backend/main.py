@@ -37,7 +37,7 @@ def ma_data(ticker: str):
 @app.get("/api/beta")
 def beta_data(ticker: str):
     try:
-        data = get_beta(ticker, market_ticker="^GSPC", period="6mo", interval="1d")
+        data = get_beta(ticker, market_ticker="^GSPC")
         return {
             "ticker": ticker.upper(),
             "beta": data

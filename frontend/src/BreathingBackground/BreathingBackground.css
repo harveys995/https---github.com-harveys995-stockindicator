@@ -1,0 +1,45 @@
+.breathing-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+
+  background: radial-gradient(
+    circle at 30% 30%,
+    #ffb347 0%,   /* soft orange */
+    #ff7043 40%,  /* coral/orange-red */
+    #8e44ad 80%,  /* warm purple */
+    #1a1a1a 100%  /* dark grey (less harsh than black) */
+  );
+  
+  
+  
+  background-size: 300% 300%;
+  animation: breathe 20s ease-in-out infinite;
+  transition: background 1s ease;
+}
+
+@keyframes breathe {
+  0% {
+    background-position: 0% 0%;
+    filter: brightness(1);
+  }
+  25% {
+    background-position: 100% 0%;
+    filter: brightness(1.15) saturate(1.2);
+  }
+  50% {
+    background-position: 100% 100%;
+    filter: brightness(1.2) saturate(1.4);
+  }
+  75% {
+    background-position: 0% 100%;
+    filter: brightness(1.15) saturate(1.2);
+  }
+  100% {
+    background-position: 0% 0%;
+    filter: brightness(1);
+  }
+}
