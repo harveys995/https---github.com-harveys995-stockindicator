@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 
-def get_moving_averages(ticker: str):
+def get_ma(ticker: str):
     try:
         ticker_obj = yf.Ticker(ticker)
         df = ticker_obj.history(period="1y")

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from indicators import get_price
-from indicators import get_moving_averages
+from indicators import get_ma
 from indicators import get_beta
 
 app = FastAPI()
@@ -25,9 +25,9 @@ def price_data(ticker: str):
         return {"error": str(e)}
 
 @app.get("/api/ma")
-def moving_averages_data(ticker: str):
+def ma_data(ticker: str):
     try:
-        data = get_moving_averages(ticker)
+        data = get_ma(ticker)
         if not data:
             return {"error": f"No moving average data for {ticker}"}
         return data
@@ -37,10 +37,10 @@ def moving_averages_data(ticker: str):
 @app.get("/api/beta")
 def beta_data(ticker: str):
     try:
-        beta = get_beta(ticker, market_ticker="^GSPC", period="6mo", interval="1d")
+        data = get_beta(ticker, market_ticker="^GSPC", period="6mo", interval="1d")
         return {
             "ticker": ticker.upper(),
-            "beta": beta
+            "beta": data
         }
     except Exception as e:
         return {"error": str(e)}
