@@ -1,13 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 import tickerReducer from './ticker';
 import priceReducer from './price';
+import maReducer from './ma'
+import betaReducer from './beta'
 
 
 
 export const store = configureStore({
   reducer: {
     ticker: tickerReducer,
-    price: priceReducer
+    price: priceReducer,
+    ma: maReducer,
+    beta: betaReducer
   },
 });
 

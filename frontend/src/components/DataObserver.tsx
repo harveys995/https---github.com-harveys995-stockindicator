@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { type RootState, type AppDispatch } from '../store/store';
 import { loadPrice } from '../store/price';
+import { loadMA } from '../store/ma';
+import { loadBeta } from '../store/beta';
 
 const DataObserver = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -10,6 +12,8 @@ const DataObserver = () => {
   useEffect(() => {
     if (ticker !== '$$$$') {
       dispatch(loadPrice(ticker));
+      dispatch(loadMA(ticker));
+      dispatch(loadBeta(ticker));
     }
   }, [ticker, dispatch]);
 

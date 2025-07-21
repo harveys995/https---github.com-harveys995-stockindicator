@@ -13,8 +13,8 @@ def get_ma(ticker: str):
         return {
             "ticker": ticker.upper(),
             "price": float(round(latest["Close"], 2)),
-            "50ma": float(round(latest["50ma"], 2)) if pd.notna(latest["50ma"]) else None,
-            "200ma": float(round(latest["200ma"], 2)) if pd.notna(latest["200ma"]) else None,
+            "ma50": float(round(latest["50ma"], 2)) if pd.notna(latest["50ma"]) else None,
+            "ma200": float(round(latest["200ma"], 2)) if pd.notna(latest["200ma"]) else None,
             "above_200ma": bool(latest["Close"] > latest["200ma"]) if pd.notna(latest["200ma"]) else None
         }
 

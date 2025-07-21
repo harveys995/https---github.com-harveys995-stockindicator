@@ -24,7 +24,7 @@ function TickerSearch() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)} // ← only update local state
-          className="flex-1 p-3 rounded-xl text-lg bg-white/70 backdrop-blur-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          className="flex-1 rounded-xl text-4xl"
           placeholder="Enter ticker (e.g. AAPL)"
         />
         <button

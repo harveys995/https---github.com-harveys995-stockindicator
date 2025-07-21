@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import QuadrantView from './views/QuadrantView';
+import QuadrantView from './views/GridView';
 import './BreathingBackground/BreathingBackground.css'
 import BreathingBackground from './BreathingBackground/BreathingBackground';
 import DataObserver from './components/DataObserver';
@@ -47,7 +47,7 @@ function App() {
   if (!data) return <p className="text-center mt-10 text-red-500">No data available</p>;
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col justify-center p-6">
       <BreathingBackground/>
       <DataObserver /> {/*Watches store and triggers fetch */}
       <QuadrantView></QuadrantView>
