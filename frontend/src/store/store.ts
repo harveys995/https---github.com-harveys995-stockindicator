@@ -2,24 +2,18 @@ import { configureStore } from '@reduxjs/toolkit';
 import tickerReducer from './ticker';
 import priceReducer from './price';
 import maReducer from './ma'
-import betaReducer from './beta'
-import sdReducer from './sd'
-import atrReducer from './atr'
-import Top10SharpeGrid from './top10_sharpe';
+import spReducer from './sp500List'
 import aianalysisReducer from './aianalysis'
-
-
+import sp500PricesReducer from './sp500Prices';
 
 export const store = configureStore({
   reducer: {
     ticker: tickerReducer,
     price: priceReducer,
     ma: maReducer,
-    beta: betaReducer,
-    sd: sdReducer,
-    atr: atrReducer,
+    sp500: spReducer,
     aianalysis: aianalysisReducer,
-    sharpeGrid: Top10SharpeGrid
+    sp500Prices: sp500PricesReducer
   },
 });
 

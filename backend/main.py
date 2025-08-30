@@ -2,12 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from indicators import get_price
 from indicators import get_ma
-from indicators import get_beta
-from indicators import get_sd
-from indicators import get_atr
-from indicators import get_sharpe_ratio
-from indicators import get_top10_us_by_mcap, get_5d_prices
-from indicators import sharpe_5d_vs_sp500_bulk
+from indicators import get_sp500_list_df
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
@@ -80,73 +75,7 @@ def ma_data(ticker: str):
     except Exception as e:
         return {"error": str(e)}
 
-@app.get("/api/beta")
-def beta_data(ticker: str):
-    try:
-        data = get_beta(ticker, market_ticker="^GSPC")
-        return {
-            "ticker": ticker.upper(),
-            "beta": data
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.get("/api/sd")
-def sd_data(ticker: str):
-    try:
-        data = get_sd(ticker)
-        return {
-            "ticker": ticker.upper(),
-            "sd": data
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.get("/api/atr")
-def atr_data(ticker: str):
-    try:
-        data = get_atr(ticker)
-        return {
-            "ticker": ticker.upper(),
-            "atr": data
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.get("/api/sharp_ratio")
-def sharp_ratio_data(ticker: str):
-    try:
-        data = get_sharpe_ratio(ticker)
-        return {
-            "ticker": ticker.upper(),
-            "sharp_ratio": data
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.get("/api/top10_5d_prices")
-def top10_5d_prices():
-    try:
-        tickers = get_top10_us_by_mcap()     # now robust & US-domiciled
-        prices = get_5d_prices(tickers)
-        return {
-            "universe": tickers,
-            "window": 5,
-            "prices": prices
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.get("/api/top10_sharpe_5d")
-def top10_sharpe_5d():
-    try:
-        tickers = get_top10_us_by_mcap()
-        values, dbg = sharpe_5d_vs_sp500_bulk(tickers, with_debug=True)
-        return {
-            "universe": tickers,
-            "benchmark": "^GSPC",
-            "sharpe_ratio_5d": values,
-            "debug": dbg  # remove this once it's all working
-        }
-    except Exception as e:
-        return {"error": str(e)}
+@app.get("/api/sp500/table")
+def sp500_table():
+    df = get_sp500_list_df()
+    return {"rows": df.to_dict(orient="records")}  # avoid: return df or []

@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import CoreFinancials from './Indicators/CoreFinancials/_CoreFinancials';
-import Volatility from './Indicators/Volatility/_Volatility';
 import './BreathingBackground/BreathingBackground.css'
 import BreathingBackground from './BreathingBackground/BreathingBackground';
 import DataObserver from './components/DataObserver';
 import AIAnalysis from './Indicators/AIAnalysis/_AIAnalysis';
-import Top10SharpeGrid from './Indicators/top10_Sharpe/top10_sharpe';
+import SP500List from './Indicators/SP500List';
 
 interface StockData {
   earnings_date: string;
@@ -52,17 +51,12 @@ function App() {
   return (
     <div className="flex flex-col justify-center p-6">
       <BreathingBackground/>
-      <DataObserver /> {/*Watches store and triggers fetch */}
-      {/* <div className='pb-6'>
+      <SP500List />
+      {/* <DataObserver />
+      <div className='pb-6'>
       <CoreFinancials />
       </div>
       <div className='pb-6'>
-      <Volatility />
-      </div> */}
-      <div className='pb-6'>
-      <Top10SharpeGrid />
-      </div>
-      {/* <div className='pb-6'>
       <AIAnalysis />
       </div> */}
     </div>
