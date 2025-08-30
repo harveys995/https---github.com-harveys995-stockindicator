@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { type RootState } from '../store/store';
+import { type RootState } from '../../store/store';
 
 const Price = () => {
   const price = useSelector((state: RootState) => state.price.value);
@@ -11,8 +11,10 @@ const Price = () => {
 
   return (
     <div className='w-full bg-white/40 backdrop-blur-md rounded-3xl shadow-md p-6'>
-      <div className='text-xl'>Market Price</div>
-      <div className='font-semibold text-4xl'>${price.price.toFixed(2)}</div>
+      <div className='text-lg'>Market Price</div>
+      <div className='font-medium text-3xl'>
+        <span className="text-xl align-bottom">$</span>{price.price.toFixed(2)}
+      </div>
     </div>
   );
 };

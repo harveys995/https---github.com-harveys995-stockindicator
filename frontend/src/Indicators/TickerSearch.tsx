@@ -18,13 +18,13 @@ function TickerSearch() {
   };
 
   return (
-    <div className="w-full bg-white/40 backdrop-blur-md rounded-3xl shadow-md p-6">
+    <div className="w-full bg-white/40 backdrop-blur-md rounded-3xl shadow-md p-4">
       <form onSubmit={handleSubmit} className="flex gap-3 items-center">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)} // ← only update local state
-          className="flex-1 rounded-xl text-4xl"
+          className="flex-1 rounded-xl text-3xl"
           placeholder="Enter ticker (e.g. AAPL)"
         />
         <button

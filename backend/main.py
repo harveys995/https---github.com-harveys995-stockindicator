@@ -3,6 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from indicators import get_price
 from indicators import get_ma
 from indicators import get_beta
+from indicators import get_sd
+from indicators import get_atr
+from indicators import get_sharpe_ratio
+from indicators import get_top10_us_by_mcap, get_5d_prices
+from indicators import sharpe_5d_vs_sp500_bulk
+from openai import OpenAI
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = FastAPI()
 
@@ -13,6 +25,40 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/api/analyze")
+async def analyze(ticker: str):
+    # Replace with real indicator values
+    price = 429.76
+    ma50 = 300.73
+    ma200 = 253.09
+    atr = 19.69
+    std_dev = 0.38
+
+    prompt = (
+        f"The stock {ticker} is currently trading at ${price}.\n"
+        f"- 50-day MA: ${ma50}\n"
+        f"- 200-day MA: ${ma200}\n"
+        f"- ATR: {atr}\n"
+        f"- Std Dev: {std_dev}\n"
+        f"Provide a confidence score out of 10 on a short term investment. if this stock will go up or not, if I can achieve 1-3% today, no more than 300 characters please in your response."
+    )
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You're a helpful financial assistant."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7
+        )
+
+        return {"analysis": response.choices[0].message.content}
+
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.get("/api/price")
 def price_data(ticker: str):
@@ -41,6 +87,66 @@ def beta_data(ticker: str):
         return {
             "ticker": ticker.upper(),
             "beta": data
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/api/sd")
+def sd_data(ticker: str):
+    try:
+        data = get_sd(ticker)
+        return {
+            "ticker": ticker.upper(),
+            "sd": data
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/api/atr")
+def atr_data(ticker: str):
+    try:
+        data = get_atr(ticker)
+        return {
+            "ticker": ticker.upper(),
+            "atr": data
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/api/sharp_ratio")
+def sharp_ratio_data(ticker: str):
+    try:
+        data = get_sharpe_ratio(ticker)
+        return {
+            "ticker": ticker.upper(),
+            "sharp_ratio": data
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/api/top10_5d_prices")
+def top10_5d_prices():
+    try:
+        tickers = get_top10_us_by_mcap()     # now robust & US-domiciled
+        prices = get_5d_prices(tickers)
+        return {
+            "universe": tickers,
+            "window": 5,
+            "prices": prices
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/api/top10_sharpe_5d")
+def top10_sharpe_5d():
+    try:
+        tickers = get_top10_us_by_mcap()
+        values, dbg = sharpe_5d_vs_sp500_bulk(tickers, with_debug=True)
+        return {
+            "universe": tickers,
+            "benchmark": "^GSPC",
+            "sharpe_ratio_5d": values,
+            "debug": dbg  # remove this once it's all working
         }
     except Exception as e:
         return {"error": str(e)}
