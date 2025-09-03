@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { type RootState } from '../../store/store';
+import { type RootState } from '../../Store/Store/store';
 
 const Price = () => {
   const price = useSelector((state: RootState) => state.price.value);

@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { type RootState } from '../store/store';
-import { setTicker } from '../store/ticker';
+import { type RootState } from '../Store/Store/store';
+import { setTicker } from '../Store/Slices/Ticker_Slice';
 import { useState } from 'react';
 
 function TickerSearch() {

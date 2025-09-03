@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { type RootState, type AppDispatch } from '../store/store';
-import { loadPrice } from '../store/price';
-import { loadMA } from '../store/ma';
-import { loadSp500Rows } from '../store/sp500List';
-import { loadAIAnalysis } from '../store/aianalysis';
+import { type RootState, type AppDispatch } from '../Store/Store/store';
+import { loadPrice } from '../Store/price';
+import { loadMA } from '../Store/ma';
+import { loadSp500Rows } from '../Store/Slices/SP500List_Slice';
+import { loadAIAnalysis } from '../Store/aianalysis';
 
 
 const DataObserver = () => {

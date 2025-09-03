@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { type RootState } from '../../store/store';
+import { type RootState } from '../../Store/Store/store';
 
 const AIAnalysis = () => {
   const aianalysis = useSelector((state: RootState) => state.aianalysis.value);

@@ -1,8 +1,11 @@
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from indicators import get_price
 from indicators import get_ma
 from indicators import get_sp500_list_df
+from indicators import sharpe_5d_vs_sp500_bulk
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
@@ -79,3 +82,45 @@ def ma_data(ticker: str):
 def sp500_table():
     df = get_sp500_list_df()
     return {"rows": df.to_dict(orient="records")}  # avoid: return df or []
+
+class TickerRequest(BaseModel):
+    tickers: list[str]
+
+@app.post("/api/top10_sharpe_5d")
+def sharpe_5d(request: TickerRequest):
+    try:
+        values, dbg = sharpe_5d_vs_sp500_bulk(request.tickers, with_debug=True)
+        return {
+            "universe": request.tickers,
+            "benchmark": "^GSPC",
+            "sharpe_ratio_5d": values,
+            "debug": dbg  # remove this once it's all working
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/api/sp500_sharpe_5d")
+def sp500_sharpe_5d():
+    try:
+        # Get S&P 500 list
+        df = get_sp500_list_df()
+        tickers = df['Symbol'].tolist()
+        
+        # Calculate Sharpe ratios for all tickers
+        values = sharpe_5d_vs_sp500_bulk(tickers)
+        
+        # Sort by Sharpe ratio (highest first)
+        sorted_results = sorted(
+            [(ticker, ratio) for ticker, ratio in values.items() if ratio is not None],
+            key=lambda x: x[1],
+            reverse=True
+        )
+        
+        return {
+            "total_stocks": len(tickers),
+            "calculated": len([v for v in values.values() if v is not None]),
+            "top_10": sorted_results[:10],
+            "all_results": dict(sorted_results)
+        }
+    except Exception as e:
+        return {"error": str(e)}
