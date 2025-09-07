@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from indicators import get_price
 from indicators import get_ma
 from indicators import get_sp500_list_df
-from indicators import sharpe_5d_vs_sp500_bulk
+from indicators import sharpe_ratio
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
@@ -99,7 +99,7 @@ def sharpe_5d(request: TickerRequest):
     except Exception as e:
         return {"error": str(e)}
 
-@app.get("/api/sp500_sharpe_5d")
+@app.get("/api/sp500_sharpe_ratio")
 def sp500_sharpe_5d():
     try:
         # Get S&P 500 list
@@ -107,7 +107,7 @@ def sp500_sharpe_5d():
         tickers = df['Symbol'].tolist()
         
         # Calculate Sharpe ratios for all tickers
-        values = sharpe_5d_vs_sp500_bulk(tickers)
+        values = sharpe_ratio(tickers)
         
         # Sort by Sharpe ratio (highest first)
         sorted_results = sorted(
