@@ -24,7 +24,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 @app.get("/api/analyze")
 async def analyze(ticker: str):
     # Replace with real indicator values
@@ -86,18 +85,6 @@ def sp500_table():
 class TickerRequest(BaseModel):
     tickers: list[str]
 
-@app.post("/api/top10_sharpe_5d")
-def sharpe_5d(request: TickerRequest):
-    try:
-        values, dbg = sharpe_5d_vs_sp500_bulk(request.tickers, with_debug=True)
-        return {
-            "universe": request.tickers,
-            "benchmark": "^GSPC",
-            "sharpe_ratio_5d": values,
-            "debug": dbg  # remove this once it's all working
-        }
-    except Exception as e:
-        return {"error": str(e)}
 
 @app.get("/api/sp500_sharpe_ratio")
 def sp500_sharpe_5d():

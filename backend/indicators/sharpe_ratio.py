@@ -3,10 +3,10 @@ import pandas as pd
 import numpy as np
 
 #* Sharp Ratio Calculation ──────────────────────────────────────────────
-#? Sharpe Ratio = (mean_daily_return - daily_risk_free_rate) / std_daily_return
+#? Sharpe Ratio = (mean_daily_return - daily_annual_risk_free_rate) / std_daily_return
 #? Where:
 #?   mean_daily_return   = average of daily % returns over the window
-#?   daily_risk_free_rate = annual_risk_free_rate / 252
+#?   daily_annual_risk_free_rate = annual_annual_risk_free_rate / 252
 #?   std_daily_return     = sample standard deviation of daily % returns (ddof=1)
 #* ──────────────────────────────────────────────────────────────────────
 
@@ -14,22 +14,18 @@ def sharpe_ratio(
     tickers,
     period: str = "100d",
     interval: str = "1d",
-    risk_free_rate: float = 0.035,   # 3.5% annual
-    with_debug: bool = False
+    annual_risk_free_rate: float = 0.035,
+
 ):
 
-
     out, debug = {}, {}
-    rf_daily = risk_free_rate / 252.0
+    daily_annual_risk_free_rate = annual_risk_free_rate / 252.0 
 
     px = yf.download(
         tickers=tickers,
         period=period,
         interval=interval,
-        auto_adjust=False,
-        group_by="column",
-        threads=False,
-        progress=False
+        auto_adjust=True, #? Account for dividend payouts & splits
     )
 
     print(px)
@@ -63,20 +59,11 @@ def sharpe_ratio(
                 out[t] = None
                 continue
 
-            sharpe = (mu - rf_daily) / sigma
+            sharpe = (mu - daily_annual_risk_free_rate) / sigma
             out[t] = round(sharpe, 3)
 
-            if with_debug:
-                debug[t] = {
-                    "n_returns": int(len(ret)),
-                    "avg_daily_return": float(mu),
-                    "daily_stdev": float(sigma),
-                    "rf_daily": float(rf_daily),
-                    "sharpe_daily": float(sharpe)
-                }
         except Exception as e:
             out[t] = None
-            if with_debug:
-                debug[t] = f"exception: {e}"
 
-    return (out, debug) if with_debug else out
+
+    return out
