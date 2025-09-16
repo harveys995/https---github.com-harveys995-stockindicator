@@ -2,11 +2,13 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 //* API Data Shape ──────────────────────────────────────────────
 interface SP500SharpeData {
-    total_stocks: number;
-    calculated: number;
-    top_10: [string, number][];
-    all_results: Record<string, number>;
-  }
+  periods: {
+      '5d': [string, number][];
+      '30d': [string, number][];
+      '100d': [string, number][];
+      '252d': [string, number][];
+  };
+}
 
 //* API Data + UI Metadata  ──────────────────────────────────────────────
 interface SP500SharpeState {
@@ -25,7 +27,7 @@ export const loadSP500Sharpe = createAsyncThunk<
   'sp500Sharpe/loadSP500Sharpe',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await fetch('http://localhost:8000/api/sp500_sharpe_5d');
+      const res = await fetch('http://localhost:8000/api/sp500_sharpe_multi');
       const json = await res.json();
       if (json.error) throw new Error(json.error);
       return json;

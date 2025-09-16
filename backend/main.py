@@ -111,3 +111,25 @@ def sp500_sharpe_5d():
         }
     except Exception as e:
         return {"error": str(e)}
+
+@app.get("/api/sp500_sharpe_multi")
+def sp500_sharpe_multi():
+    try:
+        df = get_sp500_list_df()
+        tickers = df['Symbol'].tolist()
+        
+        periods = ["5d", "30d", "100d", "252d"]
+        results = {}
+        
+        for period in periods:
+            values = sharpe_ratio(tickers, period=period)
+            sorted_results = sorted(
+                [(ticker, ratio) for ticker, ratio in values.items() if ratio is not None],
+                key=lambda x: x[1],
+                reverse=True
+            )
+            results[period] = sorted_results[:10]
+        
+        return {"periods": results}
+    except Exception as e:
+        return {"error": str(e)}

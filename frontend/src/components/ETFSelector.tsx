@@ -1,5 +1,4 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { type RootState } from '../Store/Store/store';
 import { setSelectedETF, selectSelectedETF, selectAvailableETFs } from '../Store/Slices/ETF_Slice';
 
 const ETFSelector = () => {
@@ -9,7 +8,7 @@ const ETFSelector = () => {
 
   return (
     <div className="w-full bg-white/40 backdrop-blur-md rounded-3xl shadow-md p-6">
-      <div className="text-lg mb-4">Select Market Index</div>
+      <div className="text-lg text-gray-800 mb-4">Select Market Index</div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {etfOptions.map((etf) => (
           <button
